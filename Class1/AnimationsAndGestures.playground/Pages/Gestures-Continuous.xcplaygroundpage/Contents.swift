@@ -36,7 +36,9 @@ class MyViewController : UIViewController {
       view.backgroundColor = color
     case .cancelled, .ended:
       panStartLocation = nil
-      view.backgroundColor = .black
+      UIView.animate(withDuration: 1.5) {
+        self.view.backgroundColor = .black
+      }
     default:
       return
     }
