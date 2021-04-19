@@ -7,6 +7,18 @@
 
 ---
 
+#### Assignments Results
+
+Assignment results are available [_here_](https://docs.google.com/spreadsheets/d/11tcye_2BSHWbpv12NI0BQ96c5D3Jsg4TG7HpXz2izXY).
+
+Find your data row by hashing your email address using **sha256**. Use an online [tool](http://www.sha1-online.com), or run this bash command:
+
+```sh
+printf "email@domain.com" | openssl sha256
+```
+
+---
+
 ## Classes
 
 ### Class 1: UIKit Animations, Gesture Recognition
