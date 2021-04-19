@@ -7,10 +7,6 @@
 
 ---
 
-### Join our Slack [>>HERE<<](https://join.slack.com/t/ioslevelupspring2021/shared_invite/zt-p0bvhsvo-HpCqcX1N94LvwBEID53~~Q)
-
----
-
 ## Classes
 
 ### Class 1: UIKit Animations, Gesture Recognition
