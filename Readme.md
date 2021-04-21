@@ -81,6 +81,107 @@ You can also subclass `UIGestureRecognizer` and use its API to create your own g
 
 See more [here](https://developer.apple.com/documentation/uikit/uigesturerecognizer).
 
+### Class 2: Testing on iOS
+
+#### Basics
+
+Unit test is a failsafe to make sure that your app **behaviour** is preserved. Unit Tests should evaluate the smallest possible functionality **in isolation** from other code.
+
+#### Unit Test lifecycle
+
+* **Arrange** - setup your subject (SUT)
+* **Act** - call the method under test
+* **Assert** - compare your results with expectations
+
+#### When a test **isn't** a Unit Tests
+
+* It talks to the database
+* It communicates over the network
+* It touches the file system
+
+#### TDD process - `Red -> Green -> Refactor`
+
+* **Red**
+  * Think for a while – what piece of code could move your current task towards completion?
+  * Write a short test:
+    * Tested object might not exist
+    * Method might not be implemented
+  * Execute your test, making sure that it fails
+* **Green**
+  * Write production code in your project:
+    * Your previous tests have to pass
+    * Do not focus on code quality
+    * You can hardcode whatever you want to achieve the passing test
+  * Execute your tests, check the results
+  * You have a proof that the test is testing the right thing
+* **Refactor**
+  * Relax 💆‍♂️ All your tests are passing ✅
+  * Go back to the code you’ve just written. See what could be improved
+  * Don’t be afraid to change your code. Tests will quickly catch mistakes
+  * Remove any code duplication (DRY) and code smells
+  * No idea how to improve? Leave it as is for a while!
+
+#### How to create unit tests in XCode?
+
+* `⌘ + U` is your best friend
+* Subclass `XCTestCase`
+* All methods that start with `test` and take no parameters and return `Void` become Unit Tests
+* Run all your tests with `⌘ + U`
+
+```swift
+import XCTest
+
+class ExampleTests: XCTestCase { 
+  func testCompilerSanity() {
+    XCTAssertEqual(true, true)
+  } 
+}
+```
+
+* Use `setUp` / `tearDown` to run code before and after *each* test
+
+```swift
+import XCTest
+@testable import MyApp
+
+class AppDelegateTests: XCTestCase {
+
+  var sut: AppDelegate!
+
+  override func setUp() {
+    super.setUp()
+    sut = AppDelegate()
+  }
+
+  override func tearDown() {
+    sut = nil
+    super.tearDown()
+  }
+
+  func testAppDelegateDoesNotHaveAWindowByDefault() {
+    XCTAssertNil(sut.window)
+  }
+
+  func testAppDelegateHasAWindowAfterAppLaunches() {
+    _ = sut.application(UIApplication.shared,  didFinishLaunchingWithOptions: [:])
+    XCTAssertNotNil(sut.window)
+  }
+
+  func testWindowShouldHaveViewControllerAfterLaunching() {
+    _ = sut.application(UIApplication.shared,  didFinishLaunchingWithOptions: [:])
+    XCTAssertTrue(sut.window?.rootViewController is MyViewController)
+  }
+}
+```
+
+#### Test Doubles
+
+Tests should be executed **in isolation**. Therefore we use **Test Doubles** in almost every scenario. Please take a look at the Joker project (which is a part of your home assignment). Play around with it – it's fully tested.
+
+There are some test doubles that you'll have to use. Test doubles let you isolate your object and perform interaction tests.
+
+---
+
 ## Resources
 
 - [Install Swift on Linux](https://swift.org/download/#releases) - we're using version `5.3`
