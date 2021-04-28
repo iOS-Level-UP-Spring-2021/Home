@@ -182,6 +182,61 @@ There are some test doubles that you'll have to use. Test doubles let you isolat
 
 ---
 
+### Class 3: Collection View and its Layout
+
+#### Basics
+
+We've talked (as the class name suggests) about `UICollectionView`. `UICollectionView` was introduced back in iOS 6 as an addition to `UITableView` for displaying collections of data on screen. Collection is not a replacement for a table – you can still use table views, however `UICollectioView` is far more generic and customizable.
+
+#### Hierarchies
+
+There are three sort of view categories that you can put in a Collection View. Those are:
+
+1. Cells – which are obviously data driven. They are the data that you display (could be anything: labels, photos, views...)
+
+2. Supplementary Views - those are data driven as well. They represent sort of a metadata to your cells. In Table View those would be your header and footer views, but here the concept of supplemetary view is far more generic, so they've picked this name instead
+
+3. Decoration Views – those are the decorations. Backgrouds, grids, etc. Everythig that is not strictly data driven – decoration views are layout driven, so they are not configured in Collection View's data source.
+
+Here you have a typical collection view layout and its view hierarchy:
+
+![Collection View hierarchy](assets/collectionview_1.png)
+
+#### Providing data
+
+There's the same datasource-based mechanism of providing data to `UICollectioView` as in table view. You set up a data source, and the collection view asks its data source for cell configuration (you use the same cell dequeue mechanism as well).
+
+#### Architecture
+
+![Collection View architecture](assets/collectionview_2.png)
+
+There are more components to a `UICollectionView` than to a `UITableView` since the collection view is **far** more generic and customizable. The main difference is the **LAYOUT** object. The layout is responsible for positioning the views inside `UICollectionView`'s content size (and to be more exact: it's responsible for calculating their *layout attributes* which the collection view later applies).
+
+##### UICollectionViewLayout
+
+The layout object is the most important object that you'll customize to get a custom collection view. It's designed to be sublassable and generic. There are just a few methods that you need to implement to get your collection view a custom layout. But firstly, let's talk about layouts that are provided with `UIKit`.
+
+There's only one layout that is provided out of the box, and it's called `UICollectionViewFlowLayout`. It's also a very customizable and subclassable layout that is designed to be a single scrolling direction, line breaking layout. There's a ton of information online that you can get about flow layout, so I won't get into much detail here (as always, start with the [documentation](https://developer.apple.com/documentation/uikit/uicollectionviewflowlayout)). Generaly speaking, you almost *never* need anything more thatn a flow layout (or a simple subclass).
+
+
+To subclass a layout (either basic, abstract collection view layout, or flow layout) you need to implement these methods:
+
+- `var collectionViewContentSize: CGSize { get }` – pretty self explainatory – you need to calculate how big your collection view is going to be.
+
+- `func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]?` - here you compute the layout attributes (frame, size, alpha, zIndex, etc... + your custom properties) for any element that should be visible in a given rect.
+
+- `func layoutAttributesForItem(at indexPath: IndexPath) -> UICollectionViewLayoutAttributes?` - same as above, but based on an index path, not on a rect.
+
+See more about subclassing [here](https://developer.apple.com/documentation/uikit/uicollectionviewlayout).
+
+##### UICollectionViewLayoutAttributes
+
+This object is the layout attributes that are computed by the layout, for the collection view. Those *objects* are also subclassable – you can add a custom layout property and pass them throught your subclass of `UICollectionViewLayoutAttributes` to your items (like background color for example). Each time you subclass `UICollectionViewLayoutAttributes` remember to override `copy()` and `isEqual` with a valid implementation since they're heavily used by the system.
+
+The layout attributes are computed by the layout and passed to a collection view, and then applied to items in `func apply(_ layoutAttributes: UICollectionViewLayoutAttributes)`. You can override this method to apply your custom attributes.
+
+---
+
 ## Resources
 
 - [Install Swift on Linux](https://swift.org/download/#releases) - we're using version `5.3`
